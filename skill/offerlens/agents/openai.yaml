@@ -1,0 +1,4 @@
+interface:
+  display_name: "OfferLens"
+  short_description: "Turn local interview recordings into structured interview review reports."
+  default_prompt: "Use this skill to process a local interview video or audio file without uploading it, extract local transcript evidence, infer interviewer/candidate turns, build a structured review_plan.json, render a Markdown/HTML/LaTeX interview review report, and validate the output."

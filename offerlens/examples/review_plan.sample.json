@@ -1,0 +1,84 @@
+{
+  "metadata": {
+    "title": "通用面试复盘样例",
+    "short_title": "通用样例",
+    "generated_at": "YYYY-MM-DD",
+    "duration": "00:08:30",
+    "source_video": "<local-video>",
+    "asr_backend": "sample transcript"
+  },
+  "source_registry": {
+    "sources": [
+      {
+        "id": "L-q01",
+        "type": "local_event",
+        "title": "q01 缓存系统优化项目",
+        "artifact_id": "interview_events.json",
+        "event_id": "q01",
+        "time_range": "01:12--02:40"
+      },
+      {
+        "id": "PY-BISECT",
+        "type": "official_docs",
+        "title": "Python documentation: bisect",
+        "url": "https://docs.python.org/3/library/bisect.html",
+        "accessed": "YYYY-MM-DD"
+      }
+    ]
+  },
+  "dashboard": {
+    "verdict": "项目主线能讲清，但负责范围、指标口径和代码边界需要更稳。",
+    "top_deductions": [
+      "项目开头没有先给量化指标。",
+      "代码题没有先声明 lower_bound invariant。"
+    ],
+    "top_strengths": [
+      "能把业务延迟和缓存方案联系起来。",
+      "能承认方案限制并给观测指标。"
+    ],
+    "next_priorities": [
+      "准备 30 秒项目主线。",
+      "背熟 lower_bound 模板。"
+    ]
+  },
+  "overview": [
+    "这是一个最小样例，用于验证报告生成链路。",
+    "真实任务中应从本地 transcript、interview_events 和 evidence frames 构造此 JSON。"
+  ],
+  "questions": [
+    {
+      "id": "q01",
+      "time_range": "01:12--02:40",
+      "title": "缓存系统优化项目",
+      "question": "你先介绍一下最近做的项目。",
+      "my_answer_cleaned": "我最近做的是一个缓存系统优化项目，主要目标是降低核心接口的延迟。我先梳理读路径里哪些数据变化不频繁、访问量又比较高，然后设计缓存 key、TTL 和失效策略，并把命中率、P95/P99 延迟和错误率接到监控里。",
+      "suggested_answer": "建议先说：我负责一个缓存优化项目，目标是降低核心接口延迟；我主要做缓存 key 设计、失效策略和监控指标，最后用 P95/P99 延迟、命中率和错误率验证效果。",
+      "refs": ["L-q01"],
+      "importance_label": "key",
+      "quality_label": "passable",
+      "score": "3/5",
+      "comment": "主线能成立，但要先给贡献、指标和限制。"
+    },
+    {
+      "id": "code01",
+      "time_range": "05:10--08:00",
+      "title": "lower_bound 二分查找",
+      "question": "写一个二分查找，返回第一个大于等于 target 的位置。",
+      "my_answer_cleaned": "我能写出二分结构，但一开始没有声明搜索区间语义，边界更新解释也偏慢。",
+      "suggested_answer": "维护半开区间 [left, right)，循环条件 left < right；mid 可行时收缩右边界，否则收缩左边界，最终返回 left。",
+      "refs": ["PY-BISECT"],
+      "importance_label": "key",
+      "quality_label": "risky",
+      "score": "2/5",
+      "comment": "代码题要先声明 invariant，再写模板。"
+    }
+  ],
+  "learning_resources": [
+    {
+      "topic": "二分模板",
+      "title": "Python documentation: bisect",
+      "url": "https://docs.python.org/3/library/bisect.html",
+      "why": "校准 lower_bound 语义、返回值和插入点定义。"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+build/
+dist/
+*.egg-info/
+runs/
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+.claude/
+*.xdv
