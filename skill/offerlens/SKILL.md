@@ -1,6 +1,6 @@
 ---
 name: offerlens
-description: Turn local interview videos, interview recordings, or interview audio files into local-first Chinese interview review reports focused on interviewer questions, the candidate's answers, concise sourced standard answers, compact coding/technical follow-up review, and short follow-up learning resources. Use when the user provides a local .mov/.mp4/.m4a/.wav recording and asks for 面试复盘, 面经整理, 面试官问题, 我的回答, 建议答案, 标准答法, 回答评价, 代码题复盘, 后续巩固资料, Q&A extraction, speaker/role inference, source-backed corrections, or a polished Markdown/HTML/LaTeX report. The skill extracts audio locally, transcribes locally when possible, infers interviewer/candidate roles, registers local/public sources, renders a structured report, and validates the final output.
+description: 将本地面试录像/录音（.mov/.mp4/.m4a/.wav）转为结构化中文面试复盘报告。Use when the user provides a local interview recording and asks for 面试复盘, 面经整理, Q&A 抽取, 面试官问题, 我的回答, 建议答案, 代码题复盘, 后续巩固资料, speaker/role inference, source-backed corrections, or a polished Markdown/HTML/LaTeX report. Local-first: audio and transcripts stay on the user's machine unless the user explicitly opts into a cloud ASR backend.
 ---
 
 # OfferLens
@@ -8,6 +8,30 @@ description: Turn local interview videos, interview recordings, or interview aud
 Use this skill to convert any local interview video or audio recording into a Chinese interview review report. Optimize for: `面试官问题覆盖率 + 我的回答 > 简短建议答案 > 一句评价/关键扣分点 > 后续巩固资料`.
 
 The output is not a course note, not a raw transcript, and not a long training plan. Keep the report compact enough to review before the next interview.
+
+## Environment Check
+
+Before running the workflow, verify required tooling. Run these checks first and surface any missing pieces to the user with install instructions — do not silently fall through:
+
+```bash
+# CLI installed via pip
+command -v offerlens >/dev/null || echo "MISSING: cd into the OfferLens repo and run 'pip install -e .'"
+
+# Audio extraction
+command -v ffmpeg >/dev/null || echo "MISSING ffmpeg — macOS: brew install ffmpeg; Linux: apt install ffmpeg"
+
+# At least one local ASR engine
+python3 -c "import whisperx" 2>/dev/null \
+  || python3 -c "import faster_whisper" 2>/dev/null \
+  || python3 -c "import mlx_whisper" 2>/dev/null \
+  || command -v whisper >/dev/null \
+  || echo "MISSING local ASR — pip install one of: whisperx, faster-whisper, mlx-whisper (Apple Silicon), openai-whisper"
+
+# LaTeX (only required for --compile PDF output)
+command -v xelatex >/dev/null || echo "OPTIONAL: install LaTeX for PDF output (mactex-no-gui / texlive-xetex)"
+```
+
+If `offerlens` or `ffmpeg` is missing, stop and tell the user what to install. Do not attempt the pipeline. LaTeX is only needed when the user asks for PDF output.
 
 ## Local-First Rule
 
