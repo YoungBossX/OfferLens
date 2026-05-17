@@ -149,7 +149,7 @@ my-review/
 忘了 `pip install -e .`，或者装在了另一个 Python 环境。检查 `which offerlens` 与 Claude Code 使用的 shell 是否一致。
 
 **ASR 输出乱码或全是英文**
-确认本地 ASR 模型支持中文（whisperx/faster-whisper 默认的 `large-v3`、`medium` 都行，`tiny.en` 这种英文专用模型不行）。
+确认本地 ASR 模型支持中文（whisperx、faster-whisper 默认的 `large-v3`、`medium` 都行，`tiny.en` 这种英文专用模型不行）。
 
 **cc-switch 找不到 SKILL.md**
 SKILL.md 在 `skill/offerlens/` 二级目录，cc-switch v3.13+ 才支持嵌套路径递归搜索。低版本请直接手动 `cp -r skill/offerlens ~/.claude/skills/offerlens`。
