@@ -1,9 +1,10 @@
 {
   "metadata": {
-    "title": "通用面试复盘样例",
-    "short_title": "通用样例",
+    "report_style": "compact_sourced",
+    "title": "某AI公司大模型算法岗面试复盘",
+    "short_title": "大模型算法面试",
     "generated_at": "YYYY-MM-DD",
-    "duration": "00:08:30",
+    "duration": "00:48:20",
     "source_video": "<local-video>",
     "asr_backend": "sample transcript"
   },
@@ -12,73 +13,274 @@
       {
         "id": "L-q01",
         "type": "local_event",
-        "title": "q01 缓存系统优化项目",
+        "title": "q01 项目介绍与负责范围",
         "artifact_id": "interview_events.json",
         "event_id": "q01",
-        "time_range": "01:12--02:40"
+        "time_range": "01:05--04:20"
       },
       {
-        "id": "PY-BISECT",
+        "id": "L-q02",
+        "type": "local_event",
+        "title": "q02 分布式训练追问",
+        "artifact_id": "interview_events.json",
+        "event_id": "q02",
+        "time_range": "04:30--08:10"
+      },
+      {
+        "id": "L-q03",
+        "type": "local_event",
+        "title": "q03 Transformer 结构对比",
+        "artifact_id": "interview_events.json",
+        "event_id": "q03",
+        "time_range": "08:30--13:50"
+      },
+      {
+        "id": "L-q04",
+        "type": "local_event",
+        "title": "q04 attention 实现",
+        "artifact_id": "interview_events.json",
+        "event_id": "q04",
+        "time_range": "26:10--35:00"
+      },
+      {
+        "id": "L-q05",
+        "type": "local_event",
+        "title": "q05 推理加速方案设计",
+        "artifact_id": "interview_events.json",
+        "event_id": "q05",
+        "time_range": "35:30--46:50"
+      },
+      {
+        "id": "ATTN-PAPER",
+        "type": "paper",
+        "title": "Attention Is All You Need (Vaswani et al., 2017)",
+        "url": "https://arxiv.org/abs/1706.03762",
+        "accessed": "YYYY-MM-DD"
+      },
+      {
+        "id": "PEFT-DOCS",
         "type": "official_docs",
-        "title": "Python documentation: bisect",
-        "url": "https://docs.python.org/3/library/bisect.html",
+        "title": "HuggingFace PEFT documentation",
+        "url": "https://huggingface.co/docs/peft",
+        "accessed": "YYYY-MM-DD"
+      },
+      {
+        "id": "VLLM-PAPER",
+        "type": "paper",
+        "title": "vLLM: Efficient Memory Management for Large Language Model Serving",
+        "url": "https://arxiv.org/abs/2309.06180",
+        "accessed": "YYYY-MM-DD"
+      },
+      {
+        "id": "FSDP-DOCS",
+        "type": "official_docs",
+        "title": "PyTorch FSDP documentation",
+        "url": "https://pytorch.org/docs/stable/fsdp.html",
+        "accessed": "YYYY-MM-DD"
+      },
+      {
+        "id": "FLASH-ATTN",
+        "type": "repo",
+        "title": "Dao-AILab/flash-attention GitHub",
+        "url": "https://github.com/Dao-AILab/flash-attention",
+        "accessed": "YYYY-MM-DD"
+      },
+      {
+        "id": "KV-CACHE",
+        "type": "article",
+        "title": "Transformer Inference Arithmetic (kipp.ly)",
+        "url": "https://kipp.ly/transformer-inference-arithmetic/",
         "accessed": "YYYY-MM-DD"
       }
     ]
   },
   "dashboard": {
-    "verdict": "项目主线能讲清，但负责范围、指标口径和代码边界需要更稳。",
+    "verdict": "能讲清核心项目结构和训练细节，Transformer 基础扎实；分布式策略和推理部署经验偏薄，追问时暴露了不少盲区。整体方向对，但边界感还需打磨——知道什么就说什么比硬答更体现工程素养。",
+    "fatal_risks": [],
     "top_deductions": [
-      "项目开头没有先给量化指标。",
-      "代码题没有先声明 lower_bound invariant。"
+      "DP/FSDP 实现区别讲得模糊，追问卡间通信时序时跳到别的话题。",
+      "推理加速只提了 vLLM 概念，没有落地经验和观测数据。",
+      "代码题没有先声明 pre-softmax 数值安全的 invariant。"
     ],
     "top_strengths": [
-      "能把业务延迟和缓存方案联系起来。",
-      "能承认方案限制并给观测指标。"
+      "能说清 LoRA 的原理（低秩分解、r 值选取、merge 时机），并跟全参微调做细节对比。",
+      "attention 实现先给了 safe softmax 公式再写代码，口头解释跟代码一致。",
+      "项目里提到用 wandb 做了 loss/ppl/length 的监控，实验习惯好。"
+    ],
+    "high_risk_topics": [
+      "FSDP 通信原语（all-gather, reduce-scatter）",
+      "LLM 推理服务化（continuous batching, PagedAttention, KV cache 管理）",
+      "KV cache 量化对长序列的稳定性"
     ],
     "next_priorities": [
-      "准备 30 秒项目主线。",
-      "背熟 lower_bound 模板。"
+      "补 FSDP 的通信模式和 checkpointing 实现。",
+      "用 vLLM 或 TGI 跑一次真实部署，记录延迟/吞吐/显存。",
+      "背熟 attention 实现模板（带头盔模式和面试口述版）。",
+      "准备一篇推理加速论文的 oral script。"
     ]
   },
   "overview": [
-    "这是一个最小样例，用于验证报告生成链路。",
-    "真实任务中应从本地 transcript、interview_events 和 evidence frames 构造此 JSON。"
+    "这是一个虚构示例，模拟大模型算法岗面试的典型问题分布。",
+    "真实任务中应从本地面试录像/录音提取 transcript、构建 interview_events.json、填写 source_registry，再渲染为报告。",
+    "本示例演示：项目深挖（2问）、技术知识（1问）、代码实现（1问）、系统设计（1问），覆盖 compact_sourced 报告全部 7 个章节。"
   ],
   "questions": [
     {
       "id": "q01",
-      "time_range": "01:12--02:40",
-      "title": "缓存系统优化项目",
-      "question": "你先介绍一下最近做的项目。",
-      "my_answer_cleaned": "我最近做的是一个缓存系统优化项目，主要目标是降低核心接口的延迟。我先梳理读路径里哪些数据变化不频繁、访问量又比较高，然后设计缓存 key、TTL 和失效策略，并把命中率、P95/P99 延迟和错误率接到监控里。",
-      "suggested_answer": "建议先说：我负责一个缓存优化项目，目标是降低核心接口延迟；我主要做缓存 key 设计、失效策略和监控指标，最后用 P95/P99 延迟、命中率和错误率验证效果。",
+      "time_range": "01:05--04:20",
+      "title": "多模态模型微调项目",
+      "question": "先介绍一下你最近做的一个项目吧，挑你最有把握的说。",
+      "question_cleaned": "先介绍一下你最近做的一个项目吧，挑你最有把握的说。",
+      "intent": "验证项目主线、个人贡献边界、实验设计能力。",
+      "my_answer_cleaned": "我做的是一个多模态模型微调项目，用 Qwen-VL 做船舶图像分类。数据是有标签的船舶图片加少量描述文本。我试了全参微调和 LoRA，LoRA 在 r=16 时效果跟全参差不多但显存少了一半。训练用了 4 张 A100，开了 FSDP 和 gradient checkpointing。评估指标是分类准确率和 F1。",
+      "answer_source_window": "01:08--04:15",
+      "answer_confidence": "high",
+      "suggested_answer": "建议先说：项目目标是什么（船舶图像分类）、我的角色、模型选择原因（为什么用 Qwen-VL 而不是纯视觉模型）。然后介绍：数据规模、训练配置（卡数、并行策略）、核心结果（LoRA vs 全参对比、关键指标）。最后主动说一个限制或失败的尝试，展示复盘能力。",
       "refs": ["L-q01"],
       "importance_label": "key",
       "quality_label": "passable",
       "score": "3/5",
-      "comment": "主线能成立，但要先给贡献、指标和限制。"
+      "score_reason": "主线清楚，但缺个人角色定位和失败案例，实验配置说了一半。",
+      "comment": "项目能成立，但要说清'我做了什么 vs 团队做了什么'。",
+      "is_key": true
     },
     {
-      "id": "code01",
-      "time_range": "05:10--08:00",
-      "title": "lower_bound 二分查找",
-      "question": "写一个二分查找，返回第一个大于等于 target 的位置。",
-      "my_answer_cleaned": "我能写出二分结构，但一开始没有声明搜索区间语义，边界更新解释也偏慢。",
-      "suggested_answer": "维护半开区间 [left, right)，循环条件 left < right；mid 可行时收缩右边界，否则收缩左边界，最终返回 left。",
-      "refs": ["PY-BISECT"],
+      "id": "q02",
+      "time_range": "04:30--08:10",
+      "title": "分布式训练追问",
+      "question": "你说用了 FSDP，能说一下 FSDP 和 DDP 的区别吗？训练时梯度是怎么同步的？",
+      "question_cleaned": "你说用了 FSDP，能说一下 FSDP 和 DDP 的区别吗？训练时梯度是怎么同步的？",
+      "intent": "验证是否真正理解分布式并行策略，还是只调了参数开关。",
+      "my_answer_cleaned": "DDP 每张卡持完整模型副本，数据分片，反向传播后对梯度做 all-reduce。FSDP 会把模型参数也分片到各卡，前向需要某层时做 all-gather 收集参数，反向时类似但还要 reduce-scatter 梯度。我设了 mixed precision 和 activation checkpointing，但 FSDP 的通信原语具体怎么编排的我说不太清楚。",
+      "answer_source_window": "04:35--08:05",
+      "answer_confidence": "low",
+      "suggested_answer": "FSDP 核心：参数分片 + 按需 all-gather（前向）+ reduce-scatter（反向梯度）。和 DDP 的关键差异是显存分布：DDP 的模型参数和优化器状态全量冗余，FSDP 只在计算时临时重建。补充：还可以提 ZeRO 三阶段的对应关系（ZeRO-1=优化器状态分片，ZeRO-2=梯度分片，ZeRO-3=参数分片≈FSDP）。",
+      "refs": ["L-q02", "FSDP-DOCS"],
       "importance_label": "key",
       "quality_label": "risky",
       "score": "2/5",
-      "comment": "代码题要先声明 invariant，再写模板。"
+      "score_reason": "能说出 DDP 和 FSDP 的基本概念，但通信原语追问时答不上去，说明可能没看过 FSDP 的实现细节。",
+      "comment": "区分'用过'和'理解'——这里暴露了后者。建议补 FSDP 的通信时序图。",
+      "is_key": true
+    },
+    {
+      "id": "q03",
+      "time_range": "08:30--13:50",
+      "title": "Transformer 编码器与解码器对比",
+      "question": "Transformer 的 encoder 和 decoder 有什么本质区别？self-attention 的 Q/K/V 各自是什么角色？",
+      "question_cleaned": "Transformer 的 encoder 和 decoder 有什么本质区别？self-attention 的 Q/K/V 各自是什么角色？",
+      "intent": "验证对 Transformer 基本结构的掌握深度，是否停留在「看过图」层面。",
+      "my_answer_cleaned": "Encoder 是双向 self-attention——每个 token 能看到序列里所有其他 token，适合理解任务。Decoder 用 causal attention mask，保证每个位置只能看到自己和之前的 token，用于自回归生成。Decoder 还有 cross-attention 层，K、V 来自 encoder 输出，Q 来自 decoder 自身。Q 代表'我在找什么'，K 代表'我有什么标签'，V 代表'匹配后取什么内容'。缩放因子 sqrt(d_k) 是为了防止点积方差随维度增长导致 softmax 梯度进入饱和区。",
+      "answer_source_window": "08:35--13:40",
+      "answer_confidence": "high",
+      "suggested_answer": "回答很扎实。可以再补一句：encoder 的 self-attention 没有未来掩码，decoder 有因果掩码 + cross-attention；Q/K/V 的直觉用检索类比（Query 是搜索词、Key 是索引、Value 是文档内容）比只说'相似度'更能体现理解。Multi-head 让模型在不同子空间同时注意不同模式。",
+      "refs": ["L-q03", "ATTN-PAPER"],
+      "importance_label": "covered",
+      "quality_label": "strong",
+      "score": "5/5",
+      "score_reason": "区分清楚、有直觉解释、提了缩放因子的数值稳定性原因。",
+      "comment": "表达流畅，结构层次好，追问大概率能继续兜住。",
+      "is_key": false
+    },
+    {
+      "id": "q04",
+      "time_range": "26:10--35:00",
+      "title": "实现 scaled dot-product attention",
+      "question": "你写一下 scaled dot-product attention 的 PyTorch 实现，包括 mask 处理。",
+      "question_cleaned": "你写一下 scaled dot-product attention 的 PyTorch 实现，包括 mask 处理。",
+      "intent": "验证代码基本功和数值安全意识。",
+      "my_answer_cleaned": "我写了基本的 Q*K^T / sqrt(d_k)，然后加了 softmax。面试官问数值安全时我才补了 '减去行最大值再 exp' 的技巧。mask 我用的是把 mask==0 的位置设成 -1e9。最后输出是 softmax(score) * V。复杂度 O(n^2*d)。",
+      "answer_source_window": "26:15--34:50",
+      "answer_confidence": "medium",
+      "suggested_answer": "要求：1) 先写 safe_softmax = softmax((QK^T - max)/sqrt(d_k))；2) mask 用 additive mask（mask==0 → -inf 而非 -1e9）；3) 考虑 causal mask 和 padding mask 的叠加。复杂度 O(n^2*d)。也可以提一句 FlashAttention 的思路：不显式写出完整 attention matrix，在 SRAM 里分块计算，把 O(n^2) 显存降到 O(n)。",
+      "refs": ["L-q04", "ATTN-PAPER", "FLASH-ATTN"],
+      "importance_label": "key",
+      "quality_label": "passable",
+      "score": "3/5",
+      "score_reason": "基本结构对，但 safe softmax 是后来才补的，mask 值用 -1e9 不够严谨。",
+      "comment": "先声明 invariant 再写代码——这是面试中拉开差距的地方。",
+      "is_key": true
+    },
+    {
+      "id": "q05",
+      "time_range": "35:30--46:50",
+      "title": "大模型推理服务化方案设计",
+      "question": "如果让你设计一个能支撑每秒 100 个请求的 LLM 推理服务，你会怎么设计？",
+      "question_cleaned": "如果让你设计一个能支撑每秒 100 个请求的 LLM 推理服务，你会怎么设计？",
+      "intent": "验证推理部署的系统设计能力和实际落地经验。",
+      "my_answer_cleaned": "我说用 vLLM 做推理引擎，因为它有 PagedAttention 管理 KV cache、支持 continuous batching。前端用 FastAPI 封装，请求先入 Redis 队列做削峰。显存不够就多卡做 tensor parallelism。但我没实际部署过推理服务，所以问到延迟 SLO 怎么设、TTFT 和 TPOT 的区别时只能讲概念。",
+      "answer_source_window": "35:35--46:40",
+      "answer_confidence": "low",
+      "suggested_answer": "分层回答：1) 推理引擎选型（vLLM/TGI/TensorRT-LLM），说明为什么选这个；2) 调度策略（continuous batching、prefill/decode 分离）；3) KV cache 管理（PagedAttention 原理、cache 复用）；4) 并行策略（TP/PP 在推理中的适用场景）；5) 监控指标（TTFT、TPOT、throughput、cache 命中率）。如果没落地经验，诚实说但展示你看了哪些材料——诚实加分。",
+      "refs": ["L-q05", "VLLM-PAPER", "KV-CACHE"],
+      "importance_label": "key",
+      "quality_label": "risky",
+      "score": "2/5",
+      "score_reason": "方案框架对但每一层都缺细节。问到具体指标时无法回答。建议诚实说没落地过。",
+      "comment": "设计题重在分层：选型→调度→显存→监控，每层一问到底。",
+      "is_key": true
     }
   ],
   "learning_resources": [
     {
-      "topic": "二分模板",
-      "title": "Python documentation: bisect",
-      "url": "https://docs.python.org/3/library/bisect.html",
-      "why": "校准 lower_bound 语义、返回值和插入点定义。"
+      "topic": "分布式训练",
+      "title": "PyTorch FSDP: Getting Started",
+      "type": "official_docs",
+      "url": "https://pytorch.org/docs/stable/fsdp.html",
+      "why": "系统理解 FSDP 的通信原语、混合精度和 checkpointing 集成。",
+      "priority": "high",
+      "language": "English",
+      "duration": "medium"
+    },
+    {
+      "topic": "分布式训练",
+      "title": "DeepSpeed ZeRO 论文：ZeRO: Memory Optimizations Toward Training Trillion Parameter Models",
+      "type": "paper",
+      "url": "https://arxiv.org/abs/1910.02054",
+      "why": "理解 ZeRO-1/2/3 与 FSDP 的对应关系和分片粒度的取舍。",
+      "priority": "medium",
+      "language": "English",
+      "duration": "medium"
+    },
+    {
+      "topic": "Attention 实现",
+      "title": "Dao-AILab/flash-attention",
+      "type": "repo",
+      "url": "https://github.com/Dao-AILab/flash-attention",
+      "why": "理解 FlashAttention 的 Tiling 和 Recomputation 策略，面试高频考点。",
+      "priority": "high",
+      "language": "English",
+      "duration": "medium"
+    },
+    {
+      "topic": "推理优化",
+      "title": "vLLM 论文 + 官方文档",
+      "type": "paper",
+      "url": "https://arxiv.org/abs/2309.06180",
+      "why": "补齐 PagedAttention、continuous batching 和 KV cache 管理的具体机制。",
+      "priority": "high",
+      "language": "English",
+      "duration": "long"
+    },
+    {
+      "topic": "推理算术",
+      "title": "Transformer Inference Arithmetic (kipp.ly)",
+      "type": "article",
+      "url": "https://kipp.ly/transformer-inference-arithmetic/",
+      "why": "用具体数字理解 LLM 推理的显存带宽和计算瓶颈，面试中算得出来很加分。",
+      "priority": "medium",
+      "language": "English",
+      "duration": "medium"
+    },
+    {
+      "topic": "面试技巧",
+      "title": "System Design for LLM Inference (YouTube: Umar Jamil)",
+      "type": "video",
+      "url": "https://www.youtube.com/watch?v=视频ID",
+      "why": "看一遍完整的推理服务设计 walkthrough，建立 oral script。",
+      "priority": "low",
+      "language": "English",
+      "duration": "medium"
     }
   ]
 }

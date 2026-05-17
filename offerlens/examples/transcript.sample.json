@@ -2,30 +2,93 @@
   "segments": [
     {
       "id": 0,
-      "start": 72.0,
-      "end": 80.0,
-      "time": "01:12",
+      "start": 65.0,
+      "end": 72.0,
+      "time": "01:05",
       "speaker": "SPEAKER_00",
       "role": "interviewer",
-      "text": "你先介绍一下最近做的项目。"
+      "text": "先介绍一下你最近做的一个项目吧，挑你最有把握的说。"
     },
     {
       "id": 1,
-      "start": 80.2,
-      "end": 160.0,
-      "time": "01:20",
+      "start": 72.5,
+      "end": 260.0,
+      "time": "01:12",
       "speaker": "SPEAKER_01",
       "role": "candidate",
-      "text": "我最近做的是一个缓存系统优化项目，主要目标是降低接口延迟。"
+      "text": "我做的是一个多模态模型微调项目，用 Qwen-VL 做船舶图像分类。数据是有标签的船舶图片加少量描述文本。我试了全参微调和 LoRA，LoRA 在 r=16 时效果跟全参差不多但显存少了一半。训练用了 4 张 A100，开了 FSDP 和 gradient checkpointing。评估指标是分类准确率和 F1。"
     },
     {
       "id": 2,
-      "start": 310.0,
-      "end": 318.0,
-      "time": "05:10",
+      "start": 270.0,
+      "end": 280.0,
+      "time": "04:30",
       "speaker": "SPEAKER_00",
       "role": "interviewer",
-      "text": "写一个二分查找，返回第一个大于等于 target 的位置。"
+      "text": "你说用了 FSDP，能说一下 FSDP 和 DDP 的区别吗？训练时梯度是怎么同步的？"
+    },
+    {
+      "id": 3,
+      "start": 280.5,
+      "end": 490.0,
+      "time": "04:40",
+      "speaker": "SPEAKER_01",
+      "role": "candidate",
+      "text": "DDP 每张卡持完整模型副本，数据分片，反向传播后对梯度做 all-reduce。FSDP 会把模型参数也分片到各卡，前向需要某层时做 all-gather 收集参数，反向时类似但还要 reduce-scatter 梯度。我设了 mixed precision 和 activation checkpointing，但 FSDP 的通信原语具体怎么编排的我说不太清楚。"
+    },
+    {
+      "id": 4,
+      "start": 510.0,
+      "end": 522.0,
+      "time": "08:30",
+      "speaker": "SPEAKER_00",
+      "role": "interviewer",
+      "text": "Transformer 的 encoder 和 decoder 有什么本质区别？self-attention 的 Q/K/V 各自是什么角色？"
+    },
+    {
+      "id": 5,
+      "start": 522.5,
+      "end": 830.0,
+      "time": "08:42",
+      "speaker": "SPEAKER_01",
+      "role": "candidate",
+      "text": "Encoder 是双向 self-attention——每个 token 能看到序列里所有其他 token，适合理解任务。Decoder 用 causal attention mask，保证每个位置只能看到自己和之前的 token，用于自回归生成。Decoder 还有 cross-attention 层，K、V 来自 encoder 输出，Q 来自 decoder 自身。Q 代表'我在找什么'，K 代表'我有什么标签'，V 代表'匹配后取什么内容'。缩放因子 sqrt(d_k) 是为了防止点积方差随维度增长导致 softmax 梯度进入饱和区。"
+    },
+    {
+      "id": 6,
+      "start": 1570.0,
+      "end": 1587.0,
+      "time": "26:10",
+      "speaker": "SPEAKER_00",
+      "role": "interviewer",
+      "text": "你写一下 scaled dot-product attention 的 PyTorch 实现，包括 mask 处理。"
+    },
+    {
+      "id": 7,
+      "start": 1587.5,
+      "end": 2100.0,
+      "time": "26:27",
+      "speaker": "SPEAKER_01",
+      "role": "candidate",
+      "text": "我写了基本的 Q 乘 K 转置除以根号 d_k，然后加了 softmax。面试官问数值安全时我才补了减去行最大值再 exp 的技巧。mask 我用的是把 mask 等于 0 的位置设成 -1e9。最后输出是 softmax 乘 V。复杂度是 O(n^2*d)。"
+    },
+    {
+      "id": 8,
+      "start": 2130.0,
+      "end": 2145.0,
+      "time": "35:30",
+      "speaker": "SPEAKER_00",
+      "role": "interviewer",
+      "text": "如果让你设计一个能支撑每秒 100 个请求的 LLM 推理服务，你会怎么设计？"
+    },
+    {
+      "id": 9,
+      "start": 2145.5,
+      "end": 2810.0,
+      "time": "35:45",
+      "speaker": "SPEAKER_01",
+      "role": "candidate",
+      "text": "我说用 vLLM 做推理引擎，因为它有 PagedAttention 管理 KV cache、支持 continuous batching。前端用 FastAPI 封装，请求先入 Redis 队列做削峰。显存不够就多卡做 tensor parallelism。但我没实际部署过推理服务，所以问到延迟 SLO 怎么设、TTFT 和 TPOT 的区别时只能讲概念。"
     }
   ]
 }
